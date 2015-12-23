@@ -33,7 +33,4 @@ class ExcelUtils(object):
 			rows.append(list(sheet.row_values(row,0,sheet.ncols)))
 		return rows
 
-if __name__=='__main__':
-	excel=ExcelUtils()
-	print excel.readExcels()
 

@@ -2,6 +2,10 @@
 
 from selenium import  webdriver
 import  sys
+from utility.excelUtils import  ExcelUtils
+from config.actionKeywords import  ActionKeywords
+
+
 
 # driver=webdriver.Firefox()
 # driver.implicitly_wait(30)
@@ -12,37 +16,57 @@ import  sys
 # driver.find_element_by_id('TANGRAM__PSP_8__submit').click()
 # driver.quit()
 
-from utility import  excelUtils
-from config import  actionKeywords
 
 
 
-class DrivenScript(object):
-	def run(self):
+
+class DrivenScript():
+	@staticmethod
+	def run():
 		for i in range(0,9):
-			excel=excelUtils.ExcelUtils()
+			driver=webdriver.Firefox()
+			excel=ExcelUtils()
 			sActionKeyword=excel.readExcel(i,3)
-			keyWord=actionKeywords.ActionKeywords()
+			keyWord=ActionKeywords()
 			if(cmp(sActionKeyword,'openBrowser')):
-				keyWord.openBrowser()
+				keyWord.openBrowser(driver)
 			if(cmp(sActionKeyword,'navigate')):
-				keyWord.navigate()
+				keyWord.navigate(driver)
 			if(cmp(sActionKeyword,'click_Login')):
-				keyWord.click_Login()
+				keyWord.click_Login(driver)
 			if(cmp(sActionKeyword,'input_Username')):
-				keyWord.input_Username()
+				keyWord.input_Username(driver)
 			if(cmp(sActionKeyword,'input_Password')):
-				keyWord.input_Password()
+				keyWord.input_Password(driver)
 			if(cmp(sActionKeyword,'waitFor')):
-				keyWord.waitFor()
+				keyWord.waitFor(driver)
 			if(cmp(sActionKeyword,'click_Login_Button')):
-				keyWord.click_Login_Button()
+				keyWord.click_Login_Button(driver)
 			if(cmp(sActionKeyword,'closeBrowser')):
-				keyWord.closeBrowser()
+				keyWord.closeBrowser(driver)
 			break
 			sys.exit(1)
 
+#关键字框架的第二版本
+class DrivenScript(unittest.TestCase):
 
+	def setUp(self):
+		self.driver=webdriver.Firefox()
+
+	def test_Second(self):
+		for i in range(0,9):
+			excel=ExcelUtils()
+			sActionKeyword=excel.readExcel(i,3)
+			self.execute_action(sActionKeyword)
+
+	def execute_action(self,keyword):
+		keywords=ActionKeywords()
+		if hasattr(keywords,keyword):
+			getattr(keywords,keyword)(self.driver)
 if __name__=='__main__':
-	script=DrivenScript()
-	script.run()
+	unittest.main(verbosity=2)
+
+
+
+
+
